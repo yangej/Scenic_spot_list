@@ -1,0 +1,18 @@
+@import "../../index";
+
+.item-row {
+  overflow: hidden;
+  max-width: 600px;
+  background-color: #fff;
+  border: $border;
+  border-radius: $radius;
+
+  p {
+    background-color: $main;
+    border-top: $border;
+  }
+
+  .icon {
+    width: 16px;
+  }
+}
