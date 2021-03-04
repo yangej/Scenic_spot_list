@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setInterceptor } from "./interceptor";
 
 function apiFactory(axiosInstance) {
     return {
@@ -14,6 +15,8 @@ function apiFactory(axiosInstance) {
 const axiosConfig = {
     baseURL: 'https://ptx.transportdata.tw'
 };
-const axiosInstance = axios(axiosConfig);
+
+const axiosInstance = axios.create(axiosConfig);
+setInterceptor(axiosInstance);
 
 export const apiExecutor = apiFactory(axiosInstance);
