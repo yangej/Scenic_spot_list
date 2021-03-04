@@ -1,0 +1,41 @@
+@import "../../index";
+
+.panel {
+  background-color: #fff;
+  padding: 20px;
+  max-width: 600px;
+  border-radius: $radius;
+  border: $border;
+
+  h4 {
+    margin: 0 0 10px 0;
+  }
+
+  .input-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p-dropdown {
+    width: 80%;
+    border: $border;
+  }
+
+  .p-dropdown-label {
+    color: black;
+    font-weight: 500;
+  }
+
+  .p-button {
+    background-color: $main;
+    color: black;
+    font-weight: 500;
+    border: $border;
+    transition: 0.25s;
+    &:hover {
+      background-color: #fff;
+      color: black;
+      border: $border;
+    }
+  }
+}
