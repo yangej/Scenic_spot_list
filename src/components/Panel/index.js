@@ -1,5 +1,4 @@
 import React from "react";
-import { withRouter } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import './style.scss';
@@ -18,4 +17,4 @@ const Panel = (props) => {
     </div>);
 };
 
-export default withRouter(Panel);
+export default Panel;
