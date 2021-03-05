@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { apiExecutor } from "../../api";
+import { openPopup } from "../../redux/action";
+import { getNeededInfos } from "../../utils/getNeededInfos";
 import ItemRow from "../../components/ItemRow";
-import {openPopup} from "../../redux/action";
-import {useDispatch} from "react-redux";
 
 const All = () => {
     const dispatcher = useDispatch();
@@ -18,16 +19,6 @@ const All = () => {
         if (isAtBottom && !isDone) {
             setGetSpotFrom(getSpotFrom => getSpotFrom + spotCount);
         }
-    };
-
-    const getNeededInfos = (response) => {
-        return response.map((item) => {
-            return {
-                id: item.ID,
-                location: item.Name,
-                description: item.Description
-            }
-        });
     };
 
     const getMoreSpots = async (count, from) => {
