@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { apiExecutor } from "../../api";
-import {mockSpotInfos} from "../../dummies/mockSpotInfos";
 import ItemRow from "../../components/ItemRow";
 
 const All = () => {
     const spotCount = 5;
-    const [ itemCount, setItemCount ] = useState(0);
+    const [ getSpotFrom, setGetSpotFrom ] = useState(0);
     const [ spots, setSpots ] = useState([]);
+    const [ isDone, setIsDone ] = useState(false);
 
-    const setSpotsInfos = (result) => {
-        return result.map((item) => {
+    const handleScroll = async (e) => {
+        const scrollingElement = e.target.scrollingElement;
+        const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
+
+        if (isAtBottom && !isDone) {
+            setGetSpotFrom(getSpotFrom => getSpotFrom + spotCount);
+        }
+    };
+
+    const getNeededInfos = (response) => {
+        return response.map((item) => {
             return {
                 id: item.ID,
                 location: item.Name,
@@ -18,20 +27,23 @@ const All = () => {
         });
     };
 
-    const handleScroll = async (e) => {
-        const scrollingElement = e.target.scrollingElement;
-
-        if (scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 100) {
-            setItemCount(itemCount => itemCount + spotCount);
-        }
+    const getMoreSpots = async (count, from) => {
+        const response = await apiExecutor.getAllSpots(count, from);
+        return getNeededInfos(response);
     };
 
     useEffect(() => {
-        setSpots(spots.concat(setSpotsInfos(mockSpotInfos.slice(itemCount, spotCount + itemCount))));
-    }, [itemCount]);
+        (async function() {
+            const spotsInfos = await getMoreSpots(spotCount, getSpotFrom + spotCount);
+            spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
+        })();
+    }, [getSpotFrom]);
 
     useEffect(() => {
-        setSpots(spots.concat(setSpotsInfos(mockSpotInfos.slice(0, spotCount))));
+        (async function() {
+            const spotsInfos = await getMoreSpots(spotCount, getSpotFrom);
+            setSpots(spots.concat(spotsInfos));
+        })();
 
         window.addEventListener('scroll', handleScroll);
 
@@ -45,8 +57,8 @@ const All = () => {
             <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                 {
                     spots.map((spot) => {
-                        return (<div className="p-mb-3">
-                            <ItemRow key={spot.ID} location={spot.location} description={spot.description}/>
+                        return (<div key={spot.id} className="p-mb-3">
+                            <ItemRow location={spot.location} description={spot.description}/>
                         </div>)
                     })
                 }
