@@ -9,7 +9,7 @@ const Navbar = () => {
             <Link to="/scenicSpot">
                 <Button label="查詢全部" className="p-ml-2"/>
             </Link>
-            <Link to="/scenicSpot/臺北市">
+            <Link to="/scenicSpot/Taipei">
                 <Button label="依城市查詢" className="p-ml-2"/>
             </Link>
         </nav>
