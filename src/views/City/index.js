@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { apiExecutor } from "../../api";
+import { useDispatch } from "react-redux";
+import { useParams, withRouter } from "react-router";
+import { getNeededInfos } from "../../utils/getNeededInfos";
+import { openPopup } from "../../redux/action";
 import ItemRow from "../../components/ItemRow";
 import Panel from "../../components/Panel";
-import {apiExecutor} from "../../api";
-import {openPopup} from "../../redux/action";
-import { useDispatch } from "react-redux";
-import {useParams, withRouter} from "react-router";
 
 const City = (props) => {
     const dispatcher = useDispatch();
@@ -53,16 +54,6 @@ const City = (props) => {
         }
     };
 
-    const getNeededInfos = (response) => {
-        return response.map((item) => {
-            return {
-                id: item.ID,
-                location: item.Name,
-                description: item.DescriptionDetail
-            }
-        });
-    };
-
     const getMoreSpots = async (city, count, from) => {
         try {
             const response = await apiExecutor.getCitySpots(city, count, from);
@@ -75,17 +66,18 @@ const City = (props) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        (async function() {
-            const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom);
-            setSpots(spotsInfos);
-        })();
+        cityOption ?
+            (async function() {
+                const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom);
+                setSpots(spotsInfos);
+            })() :
+            props.history.push('/');
 
         window.addEventListener('scroll', handleScroll);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [city]);
 
@@ -108,7 +100,7 @@ const City = (props) => {
                             return (<div key={spot.id} className="p-mb-3">
                                 <ItemRow location={spot.location} description={spot.description}/>
                             </div>)
-                        }) : <p>該城市目前沒有景點</p>
+                        }) : <p style={{height: '500px'}}>該城市目前沒有景點</p>
                 }
             </div>
         </div>
