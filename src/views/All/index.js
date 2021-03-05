@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { apiExecutor } from "../../api";
 import ItemRow from "../../components/ItemRow";
+import {openPopup} from "../../redux/action";
+import {useDispatch} from "react-redux";
 
 const All = () => {
+    const dispatcher = useDispatch();
     const spotCount = 30;
     const [ getSpotFrom, setGetSpotFrom ] = useState(0);
     const [ spots, setSpots ] = useState([]);
@@ -28,8 +31,13 @@ const All = () => {
     };
 
     const getMoreSpots = async (count, from) => {
-        const response = await apiExecutor.getAllSpots(count, from);
-        return getNeededInfos(response);
+        try {
+            const response = await apiExecutor.getAllSpots(count, from);
+            return getNeededInfos(response);
+        } catch (error) {
+            dispatcher(openPopup({ text: error }));
+            return []
+        }
     };
 
     useEffect(() => {
@@ -37,6 +45,8 @@ const All = () => {
             const spotsInfos = await getMoreSpots(spotCount, getSpotFrom + spotCount);
             spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
         })();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getSpotFrom]);
 
     useEffect(() => {
@@ -50,17 +60,20 @@ const All = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div className="p-pt-6">
             <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                 {
-                    spots.map((spot) => {
-                        return (<div key={spot.id} className="p-mb-3">
-                            <ItemRow location={spot.location} description={spot.description}/>
-                        </div>)
-                    })
+                    spots.length ?
+                        spots.map((spot) => {
+                            return (<div key={spot.id} className="p-mb-3">
+                                <ItemRow location={spot.location} description={spot.description}/>
+                            </div>)
+                        }) : <p>全台目前沒有景點</p>
                 }
             </div>
         </div>

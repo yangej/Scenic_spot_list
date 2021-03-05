@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import ItemRow from "../../components/ItemRow";
 import Panel from "../../components/Panel";
 import {apiExecutor} from "../../api";
+import {openPopup} from "../../redux/action";
+import { useDispatch } from "react-redux";
+import {useParams, withRouter} from "react-router";
 
-const City = () => {
+const City = (props) => {
+    const dispatcher = useDispatch();
     const spotCount = 30;
+    const city = useParams().city;
     const [ isDone, setIsDone ] = useState(false);
     const [ getSpotFrom, setGetSpotFrom ] = useState(0);
     const [ spots, setSpots ] = useState([]);
@@ -32,12 +37,10 @@ const City = () => {
         { text: '澎湖縣', code: 'PenghuCounty' },
         { text: '連江縣', code: 'LienchiangCounty' },
     ];
-    const [cityOption, setCityOption] = useState(cities[0]);
-
+    const [cityOption, setCityOption] = useState(cities.find(currentCity => currentCity.code === city));
     const onSearchCity = async (city) => {
         // TODO: test if scroll to top && get correct data
-        const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom + spotCount);
-        setSpots(spotsInfos);
+        props.history.push(`/scenicSpot/${city}`);
         window.scrollTo(0, 0);
     };
 
@@ -61,15 +64,19 @@ const City = () => {
     };
 
     const getMoreSpots = async (city, count, from) => {
-        const response = await apiExecutor.getCitySpots(city, count, from);
-        return getNeededInfos(response);
+        try {
+            const response = await apiExecutor.getCitySpots(city, count, from);
+            return getNeededInfos(response);
+        } catch (error) {
+            dispatcher(openPopup({ text: error }));
+            return [];
+        }
     };
 
     useEffect(() => {
         window.scrollTo(0, 0);
-
         (async function() {
-            const spotsInfos = await getMoreSpots(cityOption.code, spotCount, getSpotFrom);
+            const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom);
             setSpots(spotsInfos);
         })();
 
@@ -78,7 +85,9 @@ const City = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         }
-    }, []);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [city]);
 
     useEffect(() => {
         getSpotFrom && (async function() {
@@ -86,6 +95,7 @@ const City = () => {
             spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
         })();
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getSpotFrom]);
 
     return (
@@ -98,11 +108,11 @@ const City = () => {
                             return (<div key={spot.id} className="p-mb-3">
                                 <ItemRow location={spot.location} description={spot.description}/>
                             </div>)
-                        }) : <p>該地區沒有景點</p>
+                        }) : <p>該城市目前沒有景點</p>
                 }
             </div>
         </div>
     );
 };
 
-export default City;
+export default withRouter(City);
