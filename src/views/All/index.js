@@ -3,7 +3,7 @@ import { apiExecutor } from "../../api";
 import ItemRow from "../../components/ItemRow";
 
 const All = () => {
-    const spotCount = 5;
+    const spotCount = 30;
     const [ getSpotFrom, setGetSpotFrom ] = useState(0);
     const [ spots, setSpots ] = useState([]);
     const [ isDone, setIsDone ] = useState(false);
@@ -33,7 +33,7 @@ const All = () => {
     };
 
     useEffect(() => {
-        (async function() {
+        getSpotFrom && (async function() {
             const spotsInfos = await getMoreSpots(spotCount, getSpotFrom + spotCount);
             spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
         })();
