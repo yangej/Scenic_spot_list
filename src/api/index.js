@@ -7,7 +7,7 @@ function apiFactory(axiosInstance) {
             return axiosInstance.get(`/MOTC/v2/Tourism/ScenicSpot?$top=${count}&$skip=${skipCount}&format=JSON`);
         },
         getCitySpots: (city, count, skipCount) => {
-            return axiosInstance.get(`/MOTC/v2/Tourism/ScenicSpot/${city}?$top=${count}&skip=${skipCount}&format=JSON`);
+            return axiosInstance.get(`/MOTC/v2/Tourism/ScenicSpot/${city}?$top=${count}&$skip=${skipCount}&format=JSON`);
         }
     }
 }
