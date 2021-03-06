@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
 import { getNeededInfos } from "../../utils/getNeededInfos";
 import { openPopup } from "../../redux/action";
+import { debounce } from "../../utils/debounce";
 import ItemRow from "../../components/ItemRow";
 import Panel from "../../components/Panel";
 
@@ -80,10 +81,10 @@ const City = (props) => {
             })() :
             props.history.push('/');
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', debounce(handleScroll, 500));
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('scroll', debounce(handleScroll, 500));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [city]);
@@ -94,7 +95,7 @@ const City = (props) => {
 
         // not called when first rendering
         getSpotFrom && (async function() {
-            const spotsInfos = await getMoreSpots(cityOption.code, spotCount, getSpotFrom + spotCount);
+            const spotsInfos = await getMoreSpots(cityOption.code, spotCount, getSpotFrom);
 
             // these two conditions means no more spots
             (spotsInfos.length < spotCount || spotsInfos.length === 0) ?

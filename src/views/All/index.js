@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { apiExecutor } from "../../api";
 import { openPopup } from "../../redux/action";
+import { debounce } from "../../utils/debounce";
 import { getNeededInfos } from "../../utils/getNeededInfos";
 import ItemRow from "../../components/ItemRow";
 
@@ -32,13 +33,16 @@ const All = () => {
     };
 
     useEffect(() => {
+        if (isDone) return;
+
         getSpotFrom && (async function() {
-            const spotsInfos = await getMoreSpots(spotCount, getSpotFrom + spotCount);
-            spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
+            const spotsInfos = await getMoreSpots(spotCount, getSpotFrom);
+            (spotsInfos.length < spotCount || spotsInfos.length === 0) ?
+                setIsDone(true) : setSpots(spots.concat(spotsInfos));
         })();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getSpotFrom]);
+    }, [isDone, getSpotFrom]);
 
     useEffect(() => {
         (async function() {
@@ -46,10 +50,10 @@ const All = () => {
             setSpots(spots.concat(spotsInfos));
         })();
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', debounce(handleScroll, 500));
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('scroll', debounce(handleScroll, 500));
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
