@@ -50,7 +50,7 @@ const City = (props) => {
         setSpots([]);
     };
 
-    const handleScroll = async (e) => {
+    const handleScroll = (e) => {
         const scrollingElement = e.target.scrollingElement;
         const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
 
