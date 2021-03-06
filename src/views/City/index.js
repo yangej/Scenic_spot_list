@@ -39,10 +39,14 @@ const City = (props) => {
         { text: '連江縣', code: 'LienchiangCounty' },
     ];
     const [cityOption, setCityOption] = useState(cities.find(currentCity => currentCity.code === city));
-    const onSearchCity = async (city) => {
-        // TODO: test if scroll to top && get correct data
+    const onSearchCity = (city) => {
         props.history.push(`/scenicSpot/${city}`);
-        window.scrollTo(0, 0);
+    };
+
+    const initializeStates = () => {
+        setIsDone(false);
+        setGetSpotFrom(0);
+        setSpots([]);
     };
 
     const handleScroll = async (e) => {
@@ -66,6 +70,9 @@ const City = (props) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        initializeStates();
+
+        // avoid user inputs weird url values
         cityOption ?
             (async function() {
                 const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom);
@@ -82,13 +89,20 @@ const City = (props) => {
     }, [city]);
 
     useEffect(() => {
+        // do nothing if there is no more data
+        if (isDone) return;
+
+        // not called when first rendering
         getSpotFrom && (async function() {
             const spotsInfos = await getMoreSpots(cityOption.code, spotCount, getSpotFrom + spotCount);
-            spotsInfos.length === 0 ? setIsDone(true) : setSpots(spots.concat(spotsInfos));
+
+            // these two conditions means no more spots
+            (spotsInfos.length < spotCount || spotsInfos.length === 0) ?
+                setIsDone(true) : setSpots(spots.concat(spotsInfos));
         })();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getSpotFrom]);
+    }, [isDone, getSpotFrom]);
 
     return (
         <div className="p-pt-6">
