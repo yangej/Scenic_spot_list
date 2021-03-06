@@ -115,7 +115,7 @@ const City = (props) => {
                             return (<div key={spot.id} className="p-mb-3">
                                 <ItemRow location={spot.location} description={spot.description}/>
                             </div>)
-                        }) : <p style={{height: '500px'}}>該城市目前沒有景點</p>
+                        }) : <p>該城市目前沒有景點</p>
                 }
             </div>
         </div>
