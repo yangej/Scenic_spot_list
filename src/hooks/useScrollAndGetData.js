@@ -15,7 +15,7 @@ const useScrollAndGetData = (getData, city) => {
             getSpotFrom += spotCount;
 
             let data = await getData.apply(null, [spotCount, getSpotFrom]);
-            data ? setSpots((spots) => spots.concat(data)) : isDone = true;
+            data.length ? setSpots((spots) => spots.concat(data)) : isDone = true;
         }
     };
 
