@@ -1,6 +1,6 @@
 import React from "react";
 import './style.scss';
-import logo from '../../images/pin.png';
+import logo from '../../images/pin.svg';
 
 const ItemRow = (props) => {
     return (
