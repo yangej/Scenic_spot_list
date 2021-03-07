@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { apiExecutor } from "../../api";
 import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
 import { getNeededInfos } from "../../utils/getNeededInfos";
 import { openPopup } from "../../redux/action";
-import { debounce } from "../../utils/debounce";
 import ItemRow from "../../components/ItemRow";
 import Panel from "../../components/Panel";
+import useScrollAndGetData from "../../hooks/useScrollAndGetData";
 
 const City = (props) => {
     const dispatcher = useDispatch();
-    const spotCount = 30;
     const city = useParams().city;
-    const [ isDone, setIsDone ] = useState(false);
-    const [ getSpotFrom, setGetSpotFrom ] = useState(0);
-    const [ spots, setSpots ] = useState([]);
+    const scrollAndGetData = useScrollAndGetData(getMoreSpots, city);
     const cities = [
         { text: '臺北市', code: 'Taipei' },
         { text: '新北市', code: 'NewTaipei' },
@@ -44,22 +41,7 @@ const City = (props) => {
         props.history.push(`/scenicSpot/${city}`);
     };
 
-    const initializeStates = () => {
-        setIsDone(false);
-        setGetSpotFrom(0);
-        setSpots([]);
-    };
-
-    const handleScroll = (e) => {
-        const scrollingElement = e.target.scrollingElement;
-        const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
-
-        if (isAtBottom && !isDone) {
-            setGetSpotFrom(getSpotFrom => getSpotFrom + spotCount);
-        }
-    };
-
-    const getMoreSpots = async (city, count, from) => {
+    async function getMoreSpots(count, from) {
         try {
             const response = await apiExecutor.getCitySpots(city, count, from);
             return getNeededInfos(response);
@@ -67,51 +49,15 @@ const City = (props) => {
             dispatcher(openPopup({ text: error }));
             return [];
         }
-    };
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        initializeStates();
-
-        // avoid user inputs weird url values
-        cityOption ?
-            (async function() {
-                const spotsInfos = await getMoreSpots(city, spotCount, getSpotFrom);
-                setSpots(spotsInfos);
-            })() :
-            props.history.push('/');
-
-        window.addEventListener('scroll', debounce(handleScroll, 500));
-
-        return () => {
-            window.removeEventListener('scroll', debounce(handleScroll, 500));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [city]);
-
-    useEffect(() => {
-        // do nothing if there is no more data
-        if (isDone) return;
-
-        // not called when first rendering
-        getSpotFrom && (async function() {
-            const spotsInfos = await getMoreSpots(cityOption.code, spotCount, getSpotFrom);
-
-            // these two conditions means no more spots
-            (spotsInfos.length < spotCount || spotsInfos.length === 0) ?
-                setIsDone(true) : setSpots(spots.concat(spotsInfos));
-        })();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isDone, getSpotFrom]);
+    }
 
     return (
-        <div className="p-pt-6">
+        <div key={city} className="p-pt-6">
             <Panel cityOption={cityOption} setCityOption={setCityOption} cities={cities} searchCity={onSearchCity}/>
             <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                 {
-                    spots.length ?
-                        spots.map((spot) => {
+                    scrollAndGetData.spots.length ?
+                        scrollAndGetData.spots.map((spot) => {
                             return (<div key={spot.id} className="p-mb-3">
                                 <ItemRow location={spot.location} description={spot.description}/>
                             </div>)
