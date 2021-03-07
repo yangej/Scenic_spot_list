@@ -20,15 +20,17 @@ const useScrollAndGetData = (getData, city) => {
     };
 
     useEffect(() => {
-        (async function() {
+        (async function firstGetSpots () {
             const spotsInfos = await getData.apply(null, [spotCount, getSpotFrom]);
             setSpots(spotsInfos);
         })();
 
-        window.addEventListener('scroll', debounce(handleScroll, 500));
+        const debouncedScrollHandler = debounce(handleScroll, 500);
+
+        window.addEventListener('scroll', debouncedScrollHandler);
 
         return () => {
-            window.removeEventListener('scroll', debounce(handleScroll, 500));
+            window.removeEventListener('scroll', debouncedScrollHandler);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
