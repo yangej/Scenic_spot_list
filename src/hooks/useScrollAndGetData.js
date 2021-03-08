@@ -1,33 +1,27 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState } from "react";
 import {debounce} from "../utils/debounce";
 
-const useScrollAndGetData = (getData, city) => {
-    const spotCount = 30;
+const SPOT_COUNT = 30;
+const useScrollAndGetData = (getData, dependency) => {
     const [ spots, setSpots ] = useState([]);
-    const [ getSpotFrom, setGetSpotFrom ] = useState(0);
-    const [ isDone, setIsDone ] = useState(false);
+    let getSpotFrom = 0;
+    let isDone = false;
 
-    const handleScroll = async function (e) {
+    const handleScroll = async (e) => {
         const scrollingElement = e.target.scrollingElement;
         const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
 
         if (isAtBottom && !isDone) {
-            setGetSpotFrom( getSpotFrom + spotCount);
+            getSpotFrom += SPOT_COUNT;
+
+            let data = await getData.apply(null, [SPOT_COUNT, getSpotFrom]);
+            data.length ? setSpots(spots => spots.concat(data)) : isDone = true;
         }
     };
 
     useEffect(() => {
-        getSpotFrom && (async function getMoreSpots () {
-            let data = await getData.apply(null, [spotCount, getSpotFrom]);
-            data.length ? setSpots((spots) => spots.concat(data)) : setIsDone(true);
-        })();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getSpotFrom]);
-
-    useEffect(() => {
         (async function firstGetSpots () {
-            const spotsInfos = await getData.apply(null, [spotCount, getSpotFrom]);
+            const spotsInfos = await getData.apply(null, [SPOT_COUNT, getSpotFrom]);
             setSpots(spotsInfos);
         })();
 
@@ -38,9 +32,9 @@ const useScrollAndGetData = (getData, city) => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [city ? city : null]);
+    }, [dependency ? dependency : null]);
 
-    return { spots, setSpots };
+    return { spots };
 };
 
 export default useScrollAndGetData;
