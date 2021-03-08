@@ -35,31 +35,27 @@ const City = (props) => {
     }
 
     return (
-        <div key={city} className="p-pt-6">
+        <div key={city} className="p-pt-6" style={{height: 1000}}>
             <Panel cityOption={cityOption} setCityOption={setCityOption} cities={cityOptions} searchCity={onSearchCity}/>
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                     {
-                        (() => {
-                            if (isLoading) {
-                                return (
-                                    <div className="p-my-6">
-                                        <Loader/>
-                                    </div>
-                                )
-                            } else {
-                                return (
-                                    scrollAndGetData.spots.length ?
-                                        scrollAndGetData.spots.map((spot) => {
-                                            return (<div key={spot.id} className="p-mb-3">
-                                                <ItemRow location={spot.location} description={spot.description}/>
-                                            </div>)
-                                        }) : <p>該城市目前沒有景點</p>
-                                )
-                            }
-                        })()
+                        scrollAndGetData.spots.map((spot) => {
+                            return (
+                                <div key={spot.id} className="p-mb-3">
+                                    <ItemRow location={spot.location} description={spot.description}/>
+                                </div>
+                            )
+                        })
                     }
                 </div>
+                {
+                    isLoading && (
+                        <div className="p-my-6">
+                            <Loader/>
+                        </div>
+                    )
+                }
             </div>
         </div>
     );
