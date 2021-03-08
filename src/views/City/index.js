@@ -35,7 +35,7 @@ const City = (props) => {
     }
 
     return (
-        <div key={city} className="p-pt-6" style={{height: 1000}}>
+        <div key={city} className="p-pt-6">
             <Panel cityOption={cityOption} setCityOption={setCityOption} cities={cityOptions} searchCity={onSearchCity}/>
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
