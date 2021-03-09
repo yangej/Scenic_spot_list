@@ -2,7 +2,7 @@ import {useEffect, useState } from "react";
 import {debounce} from "../utils/debounce";
 
 const SPOT_COUNT = 30;
-const useScrollAndGetData = (getData, dependency) => {
+const useInfiniteScroll = (getData, dependency) => {
     const [ spots, setSpots ] = useState([]);
     let getSpotFrom = 0;
     let isDone = false;
@@ -37,4 +37,4 @@ const useScrollAndGetData = (getData, dependency) => {
     return { spots };
 };
 
-export default useScrollAndGetData;
+export default useInfiniteScroll;

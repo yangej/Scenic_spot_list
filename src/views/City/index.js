@@ -8,12 +8,12 @@ import { cityOptions } from "./cityOptions";
 import ItemRow from "../../components/ItemRow";
 import Panel from "../../components/Panel";
 import Loader from "../../components/Loader";
-import useScrollAndGetData from "../../hooks/useScrollAndGetData";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 
 const City = (props) => {
     const city = useParams().city;
     const dispatcher = useDispatch();
-    const scrollAndGetData = useScrollAndGetData(getMoreSpots, city);
+    const infiniteScroll = useInfiniteScroll(getMoreSpots, city);
     const [cityOption, setCityOption] = useState(cityOptions.find(currentCity => currentCity.code === city));
     const [isLoading, setIsLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const City = (props) => {
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                     {
-                        scrollAndGetData.spots.map((spot) => {
+                        infiniteScroll.spots.map((spot) => {
                             return (
                                 <div key={spot.id} className="p-mb-3">
                                     <ItemRow location={spot.location} description={spot.description}/>

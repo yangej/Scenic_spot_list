@@ -4,12 +4,12 @@ import { apiExecutor } from "../../api";
 import { openPopup } from "../../redux/action";
 import { getNeededInfos } from "../../utils/getNeededInfos";
 import ItemRow from "../../components/ItemRow";
-import useScrollAndGetData from "../../hooks/useScrollAndGetData";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 import Loader from "../../components/Loader";
 
 const All = () => {
     const dispatcher = useDispatch();
-    const scrollAndGetData = useScrollAndGetData(getMoreSpots);
+    const infiniteScroll = useInfiniteScroll(getMoreSpots);
     const [isLoading, setIsLoading] = useState(true);
 
     async function getMoreSpots (count, from) {
@@ -29,7 +29,7 @@ const All = () => {
         <div className="p-pt-6">
             <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                 {
-                    scrollAndGetData.spots.map((spot) => {
+                    infiniteScroll.spots.map((spot) => {
                         return (<div key={spot.id} className="p-mb-3">
                             <ItemRow location={spot.location} description={spot.description}/>
                         </div>)
