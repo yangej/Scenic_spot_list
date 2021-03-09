@@ -3,10 +3,11 @@
 ### 開啟專案
 `yarn start`
 
-### 資料夾簡介
-+-- **src/views**：這裡放置了所有分頁：All（/scenicSpot）、City（/scenicSpot/:city）。</br>
-+-- **src/components**：這裡放置了所有子組件，導覽列、篩選器等等。</br>
-+-- **src/redux**：使用redux主要是為了全局掛載popup，在專案裡是拿來顯示catch到的error。</br>
-+-- **src/api**：為了使用方便，特別把api集中管理，統一設置axios。</br>
-+-- **src/dummies**：這裡的資料是在接api前使用的假資料。</br>
-+-- **src/utils**：這裡放的是共用的方法。
+### 專案架構
+#### 概覽圖
+![structure@216x](https://user-images.githubusercontent.com/40908020/110468725-a48d0880-8113-11eb-953f-7f65d55f7acc.png)
+
+#### infinite scroll
+1. 是每個頁面都要有的feature，所以將其封裝為useScrollAndGetData hook並個別引入。
+2. All和City呼叫api的url不同，因此將呼叫方法當作第一個參數getData傳入useScrollAndGetData。
+3. City需要依使用者選擇的城市來重設useScrollAndGetData的state，因此第二個參數dependency為hook呼叫的依據。
