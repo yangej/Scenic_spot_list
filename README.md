@@ -3,7 +3,7 @@
 
 ## 專案架構
 ### 概覽圖
-![structure_1](https://user-images.githubusercontent.com/40908020/110493227-8c29e780-812d-11eb-9fa6-fb6b099d6881.png)
+![structure](https://user-images.githubusercontent.com/40908020/110506967-8edf0980-813a-11eb-9d8c-83305011fe53.png)
 
 ### infinite scroll
 1. 是每個頁面都要有的feature，所以將其封裝為 `useInfiniteScroll(getData, dependency)` hook並各別引入。
