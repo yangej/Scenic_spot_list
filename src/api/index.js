@@ -29,7 +29,7 @@ function getAuthorizationHeader() {
 
 const axiosConfig = {
     baseURL: 'https://ptx.transportdata.tw',
-    header: getAuthorizationHeader()
+    headers: getAuthorizationHeader()
 };
 
 const axiosInstance = axios.create(axiosConfig);
