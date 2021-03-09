@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { apiExecutor } from "../../api";
 import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
