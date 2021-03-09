@@ -13,7 +13,7 @@ import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 const City = (props) => {
     const city = useParams().city;
     const dispatcher = useDispatch();
-    const infiniteScroll = useInfiniteScroll(getMoreSpots, city);
+    const { spots } = useInfiniteScroll(getMoreSpots, city);
     const [cityOption, setCityOption] = useState(cityOptions.find(currentCity => currentCity.code === city));
     const [isLoading, setIsLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const City = (props) => {
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
                     {
-                        infiniteScroll.spots.map((spot) => {
+                        spots.map((spot) => {
                             return (
                                 <div key={spot.id} className="p-mb-3">
                                     <ItemRow location={spot.location} description={spot.description}/>
@@ -48,13 +48,9 @@ const City = (props) => {
                             )
                         })
                     }
-                    {
-                        (
-                            <div className="p-my-3" style={{ display: isLoading ? 'block' : 'none' }}>
-                                <Loader/>
-                            </div>
-                        )
-                    }
+                    <div className="p-my-3" style={{ display: isLoading ? 'block' : 'none' }}>
+                        <Loader/>
+                    </div>
                 </div>
             </div>
         </div>
