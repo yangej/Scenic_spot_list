@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { apiExecutor } from "../../api";
 import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
@@ -48,14 +48,14 @@ const City = (props) => {
                             )
                         })
                     }
+                    {
+                        (
+                            <div className="p-my-3" style={{ display: isLoading ? 'block' : 'none' }}>
+                                <Loader/>
+                            </div>
+                        )
+                    }
                 </div>
-                {
-                    isLoading && (
-                        <div className="p-my-6">
-                            <Loader/>
-                        </div>
-                    )
-                }
             </div>
         </div>
     );

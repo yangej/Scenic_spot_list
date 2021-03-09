@@ -35,14 +35,14 @@ const All = () => {
                         </div>)
                     })
                 }
+                {
+                    (
+                        <div className="p-my-3" style={{ display: isLoading ? 'block' : 'none' }}>
+                            <Loader/>
+                        </div>
+                    )
+                }
             </div>
-            {
-                isLoading && (
-                    <div className="p-my-6">
-                        <Loader/>
-                    </div>
-                )
-            }
         </div>
     )
 };
