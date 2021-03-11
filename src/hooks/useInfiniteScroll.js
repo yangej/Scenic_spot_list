@@ -15,7 +15,7 @@ const useInfiniteScroll = (getData, dependency) => {
             getSpotFrom += SPOT_COUNT;
 
             let data = await getData.apply(null, [SPOT_COUNT, getSpotFrom]);
-            data.length ? setSpots(spots => spots.concat(data)) : isDone = true;
+            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : isDone = true;
         }
     };
 
