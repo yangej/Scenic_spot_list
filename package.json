@@ -20,7 +20,8 @@
     "react-scripts": "4.0.2",
     "react-transition-group": "^4.4.1",
     "redux": "^4.0.5",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "why-did-you-update": "^1.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
