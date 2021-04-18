@@ -2,8 +2,7 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import All from "./views/All";
-import City from "./views/City";
+import ScenicSpotList from "./views/ScenicSpotList";
 import Popup from "./components/Popup";
 
 const App = () => {
@@ -12,8 +11,8 @@ const App = () => {
             <Navbar/>
             <Switch>
                 <Redirect from="/" to="/scenicSpot" exact></Redirect>
-                <Route path="/scenicSpot" exact render={() => <All/>}></Route>
-                <Route path="/scenicSpot/:city" render={() => <City/>}></Route>
+                <Route path="/scenicSpot" exact render={() => <ScenicSpotList/>}></Route>
+                <Route path="/scenicSpot/:city" render={() => <ScenicSpotList/>}></Route>
                 <Redirect from="*" to="/scenicSpot"></Redirect>
             </Switch>
             <Popup/>
