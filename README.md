@@ -8,18 +8,18 @@
 ### 專案簡述
 整個畫面有四個component：Navbar、Panel、ItemRow以及Loader
 
-#### - Navbar
+#### Navbar
 在Navbar上有兩個link：「查詢全部」以及「按照城市查詢」
 * 「查詢全部」會導向/scenicSpot頁面
 * 「按照城市查詢」會預設導向/scenicSpot/Taipei頁面
 
-#### - Panel
+#### Panel
 Panel是用在篩選想要查詢的城市，所以只有當router能取得參數city時才會出現
 
-#### - ItemRow
+#### ItemRow
 ItemRow是用來顯示每筆景點資料的元件
 
-#### - Loader
+#### Loader
 在執行非同步存取資料時，Loader會顯示來提示資料載入中
 
 
