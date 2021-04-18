@@ -5,7 +5,7 @@
 ### 概覽圖
 ![project-structure](https://user-images.githubusercontent.com/40908020/115142187-f742d400-a072-11eb-8aa4-e9636978e66f.png)
 
-### 專案簡述
+## 專案簡述
 整個畫面有四個component：Navbar、Panel、ItemRow以及Loader
 
 #### Navbar
@@ -23,6 +23,6 @@ ItemRow是用來顯示每筆景點資料的元件
 在執行非同步存取資料時，Loader會顯示來提示資料載入中
 
 
-### 其他
+## 其他
 * 專案雖然小，但想用用看redux，所以就拿來控制Popup的開關以及顯示的字。
 * 由於開發初期api有一天20次的限制，沒有開console就不知道是api的錯誤，所以拿Popup來顯示catch到的error(429)。
