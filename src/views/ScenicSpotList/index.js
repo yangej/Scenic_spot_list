@@ -10,11 +10,6 @@ import {apiExecutor} from "../../api";
 import {getNeededInfos} from "../../utils/getNeededInfos";
 import {debounce} from "../../utils/debounce";
 
-if (process.env.NODE_ENV !== 'production') {
-    const {whyDidYouUpdate} = require('why-did-you-update');
-    whyDidYouUpdate(React);
-}
-
 const SPOT_COUNT = 30;
 const ScenicSpotList = React.memo(({ history }) => {
     const city = useParams().city;
