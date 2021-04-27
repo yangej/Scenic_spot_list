@@ -17,7 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 const SPOT_COUNT = 30;
 const ScenicSpotList = React.memo(({ history }) => {
-    console.log("renders!")
     const city = useParams().city;
     const dispatcher = useDispatch();
     const [ cityOption, setCityOption ] = useState({ text: "", code: "" });
