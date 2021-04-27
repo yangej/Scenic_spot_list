@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
 import { openPopup } from "../../redux/action";
@@ -17,13 +17,14 @@ if (process.env.NODE_ENV !== 'production') {
 
 const SPOT_COUNT = 30;
 const ScenicSpotList = React.memo(({ history }) => {
+    console.log("renders!")
     const city = useParams().city;
     const dispatcher = useDispatch();
     const [ cityOption, setCityOption ] = useState({ text: "", code: "" });
     const [ spots, setSpots ] = useState([]);
-    const [ isLoading, setIsLoading ] = useState(true);
-    let getSpotFrom = 0;
-    let hasMoreSpots = true;
+    const isLoading = useRef(true);
+    const getSpotFrom = useRef(0);
+    const hasMoreSpots = useRef(true);
 
     const onSearchCity = useCallback((city) => {
         history.push(`/scenicSpot/${city}`);
@@ -40,14 +41,14 @@ const ScenicSpotList = React.memo(({ history }) => {
     const getMoreSpots = useCallback((count, from) => {
         async function fetchSpots (count, from) {
             try {
-                setIsLoading(true);
+                isLoading.current = true;
                 const response = city ? await apiExecutor.getCitySpots(city, count, from) : await apiExecutor.getAllSpots(count, from);
                 return getNeededInfos(response);
             } catch (error) {
                 dispatcher(openPopup({ text: error }));
                 return [];
             } finally {
-                setIsLoading(false);
+                isLoading.current = false;
             }
         }
 
@@ -60,16 +61,16 @@ const ScenicSpotList = React.memo(({ history }) => {
         const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
 
         if (isAtBottom && hasMoreSpots) {
-            getSpotFrom += SPOT_COUNT;
+            getSpotFrom.current += SPOT_COUNT;
 
-            let data = await getMoreSpots(SPOT_COUNT, getSpotFrom);
-            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots = false;
+            let data = await getMoreSpots(SPOT_COUNT, getSpotFrom.current);
+            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots.current = false;
         }
     };
 
     useEffect(() => {
         const firstGetSpots = async function () {
-            const spotsInfos = await getMoreSpots(SPOT_COUNT, getSpotFrom);
+            const spotsInfos = await getMoreSpots(SPOT_COUNT, getSpotFrom.current);
             setSpots(spotsInfos);
         };
         firstGetSpots();
