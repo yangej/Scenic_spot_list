@@ -19,8 +19,8 @@ const SPOT_COUNT = 30;
 const ScenicSpotList = React.memo(({ history }) => {
     const city = useParams().city;
     const dispatcher = useDispatch();
-    const [ cityOption, setCityOption ] = useState({ text: "", code: "" });
     const [ spots, setSpots ] = useState([]);
+    const cityOption = useRef({ text: "", code: "" });
     const isLoading = useRef(true);
     const getSpotFrom = useRef(0);
     const hasMoreSpots = useRef(true);
@@ -74,7 +74,7 @@ const ScenicSpotList = React.memo(({ history }) => {
         };
         firstGetSpots();
 
-        setCityOption(cityOptions.find(currentCity => currentCity.code === city));
+        cityOption.current = (cityOptions.find(currentCity => currentCity.code === city));
 
         const debouncedScrollHandler = debounce(handleScroll, 500);
         window.addEventListener('scroll', debouncedScrollHandler);
@@ -88,7 +88,7 @@ const ScenicSpotList = React.memo(({ history }) => {
     return (
         <div key={city} className="p-pt-6">
             {
-                city && (<Panel cityOption={cityOption} setCityOption={setCityOption} cities={cityOptions} searchCity={onSearchCity}/>)
+                city && (<Panel cityOption={cityOption.current} cities={cityOptions} searchCity={onSearchCity}/>)
             }
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
