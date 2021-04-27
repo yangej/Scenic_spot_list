@@ -3,13 +3,26 @@
 
 ## 專案架構
 ### 概覽圖
-![structure](https://user-images.githubusercontent.com/40908020/110506967-8edf0980-813a-11eb-9d8c-83305011fe53.png)
+![project-structure](https://user-images.githubusercontent.com/40908020/115142187-f742d400-a072-11eb-8aa4-e9636978e66f.png)
 
-### infinite scroll
-1. 是每個頁面都要有的feature，所以將其封裝為 `useInfiniteScroll(getData, dependency)` hook並各別引入。
-2. All和City呼叫api的url不同，因此將獲取資料的方法當作第一個參數 `getData` 傳入 `useInfiniteScroll`。
-3. City需要依使用者選擇的城市來重設 `useInfiniteScroll` 的state，因此第二個參數`dependency`為useEffect執行的依據。
+## 專案簡述
+整個畫面有四個component：Navbar、Panel、ItemRow以及Loader
 
-### error message modal
-1. 專案雖然小，但想用用看redux，所以就拿來控制Popup的開關以及顯示的字。
-2. 由於開發初期api有一天20次的限制，沒有開console就不知道是api的錯誤，所以拿Popup來顯示catch到的error(429)。
+#### Navbar
+在Navbar上有兩個link：「查詢全部」以及「按照城市查詢」
+* 「查詢全部」會導向/scenicSpot頁面
+* 「按照城市查詢」會預設導向/scenicSpot/Taipei頁面
+
+#### Panel
+Panel是用在篩選想要查詢的城市，所以只有當router能取得參數city時才會出現
+
+#### ItemRow
+ItemRow是用來顯示每筆景點資料的元件
+
+#### Loader
+在執行非同步存取資料時，Loader會顯示來提示資料載入中
+
+
+## 其他
+* 專案雖然小，但想用用看redux，所以就拿來控制Popup的開關以及顯示的字。
+* 由於開發初期api有一天20次的限制，沒有開console就不知道是api的錯誤，所以拿Popup來顯示catch到的error(429)。
