@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, withRouter } from "react-router";
 import { openPopup } from "../../redux/action";
@@ -15,10 +15,10 @@ const ScenicSpotList = React.memo(({ history }) => {
     const city = useParams().city;
     const dispatcher = useDispatch();
     const [ spots, setSpots ] = useState([]);
-    const cityOption = useRef({ text: "", code: "" });
-    const isLoading = useRef(true);
-    const getSpotFrom = useRef(0);
-    const hasMoreSpots = useRef(true);
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ cityOption, setCityOption ] = useState({ text: "", code: "" });
+    let getSpotFrom = 0;
+    let hasMoreSpots = true;
 
     const onSearchCity = useCallback((city) => {
         history.push(`/scenicSpot/${city}`);
@@ -35,41 +35,41 @@ const ScenicSpotList = React.memo(({ history }) => {
     const getMoreSpots = useCallback((count, from) => {
         async function fetchSpots (count, from) {
             try {
-                isLoading.current = true;
+                setIsLoading(true);
                 const response = city ? await apiExecutor.getCitySpots(city, count, from) : await apiExecutor.getAllSpots(count, from);
                 return getNeededInfos(response);
             } catch (error) {
                 dispatcher(openPopup({ text: error }));
                 return [];
             } finally {
-                isLoading.current = false;
+                setIsLoading(false);
             }
         }
 
         return fetchSpots(count, from);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [city ? city : null]);
+    }, [city]);
 
     const handleScroll = async (e) => {
         const scrollingElement = e.target.scrollingElement;
         const isAtBottom = scrollingElement.clientHeight + scrollingElement.scrollTop > scrollingElement.scrollHeight - 10;
 
         if (isAtBottom && hasMoreSpots) {
-            getSpotFrom.current += SPOT_COUNT;
+            getSpotFrom += SPOT_COUNT;
 
-            let data = await getMoreSpots(SPOT_COUNT, getSpotFrom.current);
-            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots.current = false;
+            let data = await getMoreSpots(SPOT_COUNT, getSpotFrom);
+            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots = false;
         }
     };
 
     useEffect(() => {
         const firstGetSpots = async function () {
-            const spotsInfos = await getMoreSpots(SPOT_COUNT, getSpotFrom.current);
+            const spotsInfos = await getMoreSpots(SPOT_COUNT, getSpotFrom);
             setSpots(spotsInfos);
         };
         firstGetSpots();
 
-        cityOption.current = (cityOptions.find(currentCity => currentCity.code === city));
+        setCityOption(cityOptions.find(currentCity => currentCity.code === city));
 
         const debouncedScrollHandler = debounce(handleScroll, 500);
         window.addEventListener('scroll', debouncedScrollHandler);
@@ -83,7 +83,7 @@ const ScenicSpotList = React.memo(({ history }) => {
     return (
         <div key={city} className="p-pt-6">
             {
-                city && (<Panel cityOption={cityOption.current} cities={cityOptions} searchCity={onSearchCity}/>)
+                city && (<Panel cityOption={cityOption} setCityOption={setCityOption} cityOptions={cityOptions} searchCity={onSearchCity}/>)
             }
             <div className="p-pt-6">
                 <div className="p-d-flex p-flex-column p-align-center p-mt-3">
