@@ -57,7 +57,7 @@ const ScenicSpotList = React.memo(({ history }) => {
         if (isAtBottom && hasMoreSpots) {
             getSpotFrom += SPOT_COUNT;
 
-            let data = await getMoreSpots(SPOT_COUNT, getSpotFrom);
+            let data = await getMoreSpots(city, SPOT_COUNT, getSpotFrom);
             data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots = false;
         }
     };
