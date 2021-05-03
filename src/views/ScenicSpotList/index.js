@@ -32,7 +32,7 @@ const ScenicSpotList = React.memo(({ history }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const getMoreSpots = useCallback((count, from) => {
+    const getMoreSpots = useCallback((city, count, from) => {
         async function fetchSpots (count, from) {
             try {
                 setIsLoading(true);
@@ -48,7 +48,7 @@ const ScenicSpotList = React.memo(({ history }) => {
 
         return fetchSpots(count, from);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [city]);
+    }, []);
 
     const handleScroll = async (e) => {
         const scrollingElement = e.target.scrollingElement;
@@ -64,7 +64,7 @@ const ScenicSpotList = React.memo(({ history }) => {
 
     useEffect(() => {
         const firstGetSpots = async function () {
-            const spotsInfos = await getMoreSpots(SPOT_COUNT, getSpotFrom);
+            const spotsInfos = await getMoreSpots(city, SPOT_COUNT, getSpotFrom);
             setSpots(spotsInfos);
         };
         firstGetSpots();
