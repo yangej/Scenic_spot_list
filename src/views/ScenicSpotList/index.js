@@ -11,7 +11,7 @@ import {getNeededInfos} from "../../utils/getNeededInfos";
 import {debounce} from "../../utils/debounce";
 
 const SPOT_COUNT = 30;
-const ScenicSpotList = React.memo(({ history }) => {
+const ScenicSpotList = ({ history }) => {
     const city = useParams().city;
     const dispatcher = useDispatch();
     const [ spots, setSpots ] = useState([]);
@@ -22,17 +22,15 @@ const ScenicSpotList = React.memo(({ history }) => {
 
     const onSearchCity = useCallback((city) => {
         history.push(`/scenicSpot/${city}`);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [history]);
 
     const showSpotName = useCallback((location) => {
         return function() {
             dispatcher(openPopup({ text: location }));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dispatcher]);
 
-    const getMoreSpots = useCallback((city, count, from) => {
+    const getMoreSpots = (city, count, from) => {
         async function fetchSpots (count, from) {
             try {
                 setIsLoading(true);
@@ -45,10 +43,8 @@ const ScenicSpotList = React.memo(({ history }) => {
                 setIsLoading(false);
             }
         }
-
         return fetchSpots(count, from);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    };
 
     const handleScroll = async (e) => {
         const scrollingElement = e.target.scrollingElement;
@@ -68,7 +64,6 @@ const ScenicSpotList = React.memo(({ history }) => {
             setSpots(spotsInfos);
         };
         firstGetSpots();
-
         setCityOption(cityOptions.find(currentCity => currentCity.code === city));
 
         const debouncedScrollHandler = debounce(handleScroll, 500);
@@ -103,6 +98,6 @@ const ScenicSpotList = React.memo(({ history }) => {
             </div>
         </div>
     );
-});
+};
 
 export default withRouter(ScenicSpotList);
