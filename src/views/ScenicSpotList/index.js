@@ -35,7 +35,8 @@ const ScenicSpotList = ({ history }) => {
             try {
                 setIsLoading(true);
                 const response = city ? await apiExecutor.getCitySpots(city, count, from) : await apiExecutor.getAllSpots(count, from);
-                return getNeededInfos(response);
+                const data = getNeededInfos(response)
+                spots.length ? setSpots(prevSpots => prevSpots.concat(data)) : setSpots(data);
             } catch (error) {
                 dispatcher(openPopup({ text: error }));
                 return [];
@@ -43,7 +44,7 @@ const ScenicSpotList = ({ history }) => {
                 setIsLoading(false);
             }
         }
-        return fetchSpots(count, from);
+        fetchSpots(count, from);
     };
 
     const handleScroll = async (e) => {
@@ -52,16 +53,14 @@ const ScenicSpotList = ({ history }) => {
 
         if (isAtBottom && hasMoreSpots) {
             getSpotFrom += SPOT_COUNT;
-
             let data = await getMoreSpots(city, SPOT_COUNT, getSpotFrom);
-            data.length ? setSpots(prevSpots => prevSpots.concat(data)) : hasMoreSpots = false;
+            if (!data.length)  hasMoreSpots = false;
         }
     };
 
     useEffect(() => {
         const firstGetSpots = async function () {
-            const spotsInfos = await getMoreSpots(city, SPOT_COUNT, getSpotFrom);
-            setSpots(spotsInfos);
+             await getMoreSpots(city, SPOT_COUNT, getSpotFrom);
         };
         firstGetSpots();
         setCityOption(cityOptions.find(currentCity => currentCity.code === city));
