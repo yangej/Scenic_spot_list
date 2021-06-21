@@ -40,7 +40,7 @@ const ScenicSpotList = ({ history }) => {
                 dispatcher(openPopup({ text: error }));
                 return [];
             } finally {
-                setIsLoading(false);
+                setTimeout(() => setIsLoading(false), 1000);
             }
         }
         return fetchSpots(count, from);
@@ -73,7 +73,7 @@ const ScenicSpotList = ({ history }) => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [city ? city : null]);
+    }, [city]);
 
     return (
         <div key={city} className="p-pt-6">
